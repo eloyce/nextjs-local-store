@@ -1,124 +1,159 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import Image from "next/image";
+import Link from "next/link";
+import { GetStaticProps } from "next/types";
+import { allProducts } from "./utils/mock-data";
 
-const inter = Inter({ subsets: ['latin'] })
+type Product = {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
+};
 
-export default function Home() {
+const Navigation = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
+    <nav className="p-4 flex flex-row items-center justify-between w-full">
+      <Link href="/">
         <Image
           className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
           src="/next.svg"
           alt="Next.js Logo"
-          width={180}
+          width={120}
           height={37}
           priority
         />
+      </Link>
+
+      <div>
+        <div className="flex justify-between">
+          <button type="button">Your cart is empty</button>
+          <div className="border border-2 border-r-slate-400 w-[2px]" />
+          <a className="text-blue-400 underline" href="#">
+            Login
+          </a>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+const GridHeader = ({ totalProducts }: { totalProducts: number }) => {
+  return (
+    <section className="pb-2 border-b border-b-slate-400 px-2 flex-col flex gap-2">
+      <div className="flex flex-row justify-between items-center">
+        <h1 className="uppercase tracking-wide text-sm">Our local products</h1>
+        <button className="" type="button">
+          Filtered by all
+        </button>
       </div>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className="flex-row flex items-center md:border-l-2 md:border-l-slate-400 md:pl-4">
+        <p className="m-0">{totalProducts} Products</p>
       </div>
+    </section>
+  );
+};
+
+const Product = ({
+  id,
+  category,
+  image,
+  price,
+  title,
+  onClick,
+}: {
+  id: number;
+  category: string;
+  price: number;
+  image: string;
+  title: string;
+  onClick: () => void;
+}) => {
+  return (
+    <article className="rounded-lg py-3 border border-slate-100 shadow-xl flex flex-col justify-between">
+      <div>
+        <button className="w-full border-b" onClick={onClick} type="button">
+          <img
+            className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert m-auto"
+            src={image}
+            alt={`product ${title}`}
+            width={120}
+            height={52}
+          />
+        </button>
+      </div>
+
+      <div className="px-2 pt-2">
+        <div className="flex flex-row justify-between mb-3">
+          <span className="capitalize text-xs">{category}</span>
+          <small className="bg-[#fee2c3] p-1 text-sm font-bold rounded">{`$${String(
+            price
+          )}`}</small>
+        </div>
+
+        <div>
+          <button
+            className="text-base text-black-300 text-left mb-2 leading-6"
+            onClick={onClick}
+            type="button"
+          >
+            <span>{title}</span>
+          </button>
+          <button
+            className="bg-blue-500 py-1.5 text-white text-lg text-center w-full rounded tracking-wide	"
+            type="button"
+          >
+            Add to cart
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+};
+
+const ProductGrid = ({ products }: { products: Product[] }) => {
+  const onClick = (product: Product) => {
+    // TODO: show modal
+    return product;
+  };
+
+  return (
+    <section className="p-6 gap-6 grid-cols-1 grid md:grid-cols-3 lg:grid-cols-6">
+      {products.map((product) => (
+        <Product
+          key={product.id}
+          id={product.id}
+          category={product.category}
+          image={product.image}
+          price={product.price}
+          title={product.title}
+          onClick={() => onClick(product)}
+        />
+      ))}
+    </section>
+  );
+};
+
+export default function Home({ products }: { products: Product[] }) {
+  return (
+    <main className="flex min-h-screen flex-col bg-white">
+      <Navigation />
+      <GridHeader totalProducts={products.length} />
+      <ProductGrid products={products} />
     </main>
-  )
+  );
 }
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  return {
+    props: {
+      products: allProducts,
+    },
+  };
+};
