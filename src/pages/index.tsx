@@ -1,12 +1,11 @@
 import React from "react";
-import { GetStaticProps } from "next/types";
-
-import { allProducts } from "./utils/mock-data";
+import { GetServerSideProps } from "next/types";
 
 import Navigation from "~/components/Navigation";
 import ProductGrid from "~/components/ProductsGrid";
 
 import { Product } from "~/types";
+import { ALL_PRODUCTS, CATEGORY_URL } from "~/utils/constants/api";
 
 export default function Home({ products }: { products: Product[] }) {
   return (
@@ -17,10 +16,42 @@ export default function Home({ products }: { products: Product[] }) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {
-      products: allProducts,
-    },
-  };
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const { query } = context;
+
+    // Check for query params on request.
+    if (typeof query.category === "string") {
+      const categories = query.category.split(",");
+
+      const data = await Promise.all(
+        categories.map((c) =>
+          fetch(`${CATEGORY_URL}/${c}`).then((res) => res.json())
+        )
+      ).then((d) => d.filter(Boolean).flat());
+
+      return {
+        props: {
+          products: data,
+        },
+      };
+    }
+
+    const url = `${ALL_PRODUCTS}?` + new URLSearchParams({ limit: "25" });
+    const response = await fetch(url);
+    const data = await response.json();
+
+    return {
+      props: {
+        products: data,
+      },
+    };
+  } catch (err) {
+    console.error("Unable to get products:: ", err);
+    return {
+      props: {
+        products: [],
+      },
+    };
+  }
 };

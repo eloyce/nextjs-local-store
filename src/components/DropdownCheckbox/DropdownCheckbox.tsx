@@ -2,7 +2,12 @@ const DropdownCheckbox = ({
   options,
   onToggle,
 }: {
-  options: { isChecked: boolean; label: string; value: string }[];
+  options: {
+    isChecked: boolean;
+    label: string;
+    value: string;
+    disabled?: boolean;
+  }[];
   onToggle: (v: boolean, index: number) => void;
 }) => {
   return (
@@ -13,6 +18,7 @@ const DropdownCheckbox = ({
             checked={option.isChecked}
             onChange={(e) => onToggle(e.target.checked, index)}
             value={option.value}
+            disabled={option.disabled}
             type="checkbox"
           />
           <span className="text-sm">{option.label}</span>

@@ -17,7 +17,7 @@ const ProductTile = ({
 
   const onClose = () => {
     if (titleButtonRef.current) {
-      // Return focus on dismiss to product
+      // Return focus on modal dismiss to product
       setTimeout(() => {
         titleButtonRef.current?.focus();
       });
@@ -26,7 +26,7 @@ const ProductTile = ({
   };
 
   const { category, image, title } = product;
-  const price = product.price.toFixed(2);
+  const price = product.price;
 
   return (
     <>
@@ -34,7 +34,11 @@ const ProductTile = ({
         <div>
           <button
             className="w-full"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              if (!isExpanded) {
+                setIsModalOpen(true);
+              }
+            }}
             type="button"
           >
             <img

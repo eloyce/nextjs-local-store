@@ -1,48 +1,73 @@
-import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 import DropdownCheckbox from "~/components/DropdownCheckbox";
 import ProductTile from "~/components/ProductTile";
 
 import { Product } from "~/types";
-import { CATEGORY_URL, CATEGORIES_URL } from "~/utils/constants/api";
+
+import {
+  CATEGORY_URL,
+  CATEGORIES_URL,
+  ALL_PRODUCTS,
+} from "~/utils/constants/api";
+import { HOME } from "~/utils/constants/routes";
 
 const ProductsGridHeader = ({
-  onCategoryEnable,
-  onCategoryDisable,
+  onCategoryFetch,
   totalProducts,
 }: {
-  onCategoryEnable: (category: string) => void;
-  onCategoryDisable: (category: string) => void;
+  onCategoryFetch: (category: string | string[]) => void;
   totalProducts: number;
 }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [categories, setCategories] = useState<
     { label: string; value: string; isChecked: boolean }[]
   >([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const onToggle = (checked: boolean, index: number) => {
-    // TODO: fix toggle and add URL params
     const newOptions = [...categories];
+    newOptions[index].isChecked = checked;
 
-    // setIsDropdownOpen(false);
+    setIsDropdownOpen(false);
 
-    if (newOptions[index].value === "all" && checked) {
-      onCategoryEnable(newOptions[index].value);
+    // If select all, check and get all.
+    // Edge case on empty checks boxes.
+    if (
+      (newOptions[index].value === "all" && checked) ||
+      newOptions.every((option) => !option.isChecked)
+    ) {
+      router.push(HOME);
+      onCategoryFetch("all");
       setCategories((prev) =>
-        prev.map((entry) => ({ ...entry, isChecked: entry.value === "all" }))
+        prev.map((entry) => ({ ...entry, isChecked: true }))
       );
       return;
     }
 
-    if (checked) {
-      onCategoryEnable(newOptions[index].value);
-    } else {
-      onCategoryDisable(newOptions[index].value);
+    const indexForAll = 0;
+    if (newOptions[indexForAll].isChecked) {
+      // If all was previously selected, deselect it.
+      newOptions[0].isChecked = false;
     }
 
-    newOptions[index].isChecked = checked;
+    const options = newOptions.reduce((accum: string[], current) => {
+      if (current.isChecked) {
+        accum.push(current.value);
+      }
+      return accum;
+    }, []);
+
+    onCategoryFetch(options);
     setCategories(newOptions);
+
+    router.push({
+      query: { category: options.join(",") },
+    });
   };
 
   const fetchCategories = async () => {
@@ -56,33 +81,68 @@ const ProductsGridHeader = ({
         isChecked: false,
       }));
 
-      setCategories([
-        { value: "all", label: "All", isChecked: true },
-        ...formattedOptions,
-      ]);
+      setCategories(formattedOptions);
+      setCheckboxFromParams(formattedOptions);
     } catch (err) {
       console.error("Unable to get categories:: ", err);
     }
   };
 
   const selectedOptions = useMemo(() => {
-    return categories.reduce((accum, current) => {
-      if (current.isChecked) {
-        accum = `${accum} ${current.label}`.trim();
-      }
-      return accum;
-    }, "");
+    const isAllSelected = categories.find(
+      (c) => c.value === "all" && c.isChecked
+    );
+    if (isAllSelected) {
+      return "all";
+    }
+
+    const formattedSelection = categories
+      .reduce((accum, current) => {
+        if (current.isChecked) {
+          accum = `${accum}${current.label},`;
+        }
+        return accum;
+      }, "")
+      .split(",")
+      .join(", ")
+      .replace(/,\s*$/, "");
+
+    return formattedSelection;
   }, [categories]);
+
+  const setCheckboxFromParams = (options: any[]) => {
+    const params = searchParams.getAll("category").join(",");
+
+    if (params.length) {
+      const optionsFromParams = options.map((c) => ({
+        label: c.label,
+        value: c.value,
+        isChecked: params.includes(c.value),
+      }));
+
+      setCategories([
+        { value: "all", label: "All", isChecked: false },
+        ...optionsFromParams,
+      ]);
+    } else {
+      setCategories((prev) => {
+        return [
+          { value: "all", label: "All", isChecked: true },
+          ...prev.map((entry) => ({ ...entry, isChecked: true })),
+        ];
+      });
+    }
+  };
 
   useEffect(() => {
     if (categories.length === 0) {
       fetchCategories();
     }
-  }, [categories]);
+  }, []);
 
   return (
-    <section className="pb-2 border-b border-b-slate-400 mx-2 py-6 flex-col flex gap-2">
-      <div className="flex flex-row justify-between items-center relative">
+    <section className="border-b border-b-slate-400 mx-2 py-4 flex-col flex gap-2 md:flex-row md:justify-between">
+      <div className="flex flex-row justify-between items-center relative md:gap-6">
         <h1 className="uppercase tracking-wide text-sm">Our local products</h1>
 
         <button
@@ -90,7 +150,7 @@ const ProductsGridHeader = ({
           onClick={() => setIsDropdownOpen((v) => !v)}
           type="button"
         >
-          <span>Filtered by {selectedOptions}</span>
+          <span className="max-w-[130px] text-ellipsis overflow-hidden whitespace-nowrap md:whitespace-normal sm:max-w-md">Filtered by {selectedOptions}</span>
           <Image
             src="/down-arrow.svg"
             alt="down arrow"
@@ -106,8 +166,8 @@ const ProductsGridHeader = ({
         )}
       </div>
 
-      <div className="flex-row flex items-center md:border-l-2 md:border-l-slate-400 md:pl-4">
-        <p className="m-0">{totalProducts} Products</p>
+      <div className="flex-row flex items-center md:border-l-[1px] md:border-l-slate-500 md:pl-5">
+        <p className="m-0 text-sm">{totalProducts} Products</p>
       </div>
     </section>
   );
@@ -116,31 +176,32 @@ const ProductsGridHeader = ({
 const ProductGrid = ({ initialProducts }: { initialProducts: Product[] }) => {
   const [products, setProducts] = useState(initialProducts);
 
-  const onCategoryEnable = async (category: string) => {
+  const onCategoryFetch = async (category: string | string[]) => {
     try {
-      const url = `${CATEGORY_URL}${category}`;
-      const response = await fetch(url);
-      const data = await response.json();
+      if (typeof category === "string") {
+        const response = await fetch(ALL_PRODUCTS);
+        const data = await response.json();
 
-      setProducts((prev) => [...prev, ...data]);
+        setProducts(data);
+        return;
+      }
+
+      const data = await Promise.all(
+        category.map((c) =>
+          fetch(`${CATEGORY_URL}/${c}`).then((res) => res.json())
+        )
+      ).then((d) => d.filter(Boolean).flat());
+
+      setProducts(data);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const onCategoryDisable = (category: string) => {
-    const filteredResults = products.filter(
-      (product) => product.category !== category
-    );
-
-    setProducts(filteredResults);
-  };
-
   return (
     <>
       <ProductsGridHeader
-        onCategoryDisable={onCategoryDisable}
-        onCategoryEnable={onCategoryEnable}
+        onCategoryFetch={onCategoryFetch}
         totalProducts={products.length}
       />
 
