@@ -1,3 +1,4 @@
 import { Product } from "./Product";
+import { CheckboxType } from "./CheckboxType";
 
-export type { Product };
+export type { Product, CheckboxType };

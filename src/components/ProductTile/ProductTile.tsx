@@ -26,7 +26,7 @@ const ProductTile = ({
   };
 
   const { category, image, title } = product;
-  const price = product.price;
+  const price = product.price.toFixed(2);
 
   return (
     <>
@@ -67,7 +67,11 @@ const ProductTile = ({
           <div>
             <button
               className="text-base text-black-300 text-left mb-2 leading-6"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                if (!isExpanded) {
+                  setIsModalOpen(true);
+                }
+              }}
               ref={titleButtonRef}
               type="button"
             >

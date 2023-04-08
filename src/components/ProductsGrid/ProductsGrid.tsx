@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import DropdownCheckbox from "~/components/DropdownCheckbox";
 import ProductTile from "~/components/ProductTile";
 
-import { Product } from "~/types";
+import { CheckboxType, Product } from "~/types";
 
 import {
   CATEGORY_URL,
@@ -23,9 +23,7 @@ const ProductsGridHeader = ({
   totalProducts: number;
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
-  const [categories, setCategories] = useState<
-    { label: string; value: string; isChecked: boolean }[]
-  >([]);
+  const [categories, setCategories] = useState<CheckboxType[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -110,7 +108,7 @@ const ProductsGridHeader = ({
     return formattedSelection;
   }, [categories]);
 
-  const setCheckboxFromParams = (options: any[]) => {
+  const setCheckboxFromParams = (options: CheckboxType[]) => {
     const params = searchParams.getAll("category").join(",");
 
     if (params.length) {
@@ -150,7 +148,9 @@ const ProductsGridHeader = ({
           onClick={() => setIsDropdownOpen((v) => !v)}
           type="button"
         >
-          <span className="max-w-[130px] text-ellipsis overflow-hidden whitespace-nowrap md:whitespace-normal sm:max-w-md">Filtered by {selectedOptions}</span>
+          <span className="max-w-[130px] text-ellipsis overflow-hidden whitespace-nowrap md:whitespace-normal sm:max-w-md">
+            Filtered by {selectedOptions}
+          </span>
           <Image
             src="/down-arrow.svg"
             alt="down arrow"

@@ -1,13 +1,10 @@
+import { CheckboxType } from "~/types";
+
 const DropdownCheckbox = ({
   options,
   onToggle,
 }: {
-  options: {
-    isChecked: boolean;
-    label: string;
-    value: string;
-    disabled?: boolean;
-  }[];
+  options: CheckboxType[];
   onToggle: (v: boolean, index: number) => void;
 }) => {
   return (
