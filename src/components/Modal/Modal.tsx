@@ -21,7 +21,6 @@ const Modal = ({
           background: "transparent",
           border: 0,
           padding: 0,
-          inset: "110px",
           ...style?.content,
         },
         overlay: { background: "rgba(0, 0, 0, 0.4)" },

@@ -1,5 +1,7 @@
-import React from "react";
 import { GetServerSideProps } from "next/types";
+import Image from "next/image";
+import React from "react";
+import storefrontPic from "../assets/storefront-bg.png";
 
 import Navigation from "~/components/Navigation";
 import ProductGrid from "~/components/ProductsGrid";
@@ -11,7 +13,15 @@ export default function Home({ products }: { products: Product[] }) {
   return (
     <main className="flex min-h-screen flex-col bg-white">
       <Navigation />
-      <ProductGrid initialProducts={products} />
+
+      <div className="w-full max-w-7xl m-auto bg-white">
+        <Image
+          alt="Picture of the storefront"
+          src={storefrontPic}
+          className="max-h-56 md:h-80 md:max-h-72 md:w-full"
+        />
+        <ProductGrid initialProducts={products} />
+      </div>
     </main>
   );
 }

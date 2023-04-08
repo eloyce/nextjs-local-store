@@ -31,10 +31,13 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
 
   return (
     <>
-      <article className="rounded-lg py-3 border border-slate-100 shadow-xl flex flex-col justify-between">
+      <article className="rounded-lg py-3 border border-slate-100 shadow-xl flex flex-col">
         <div>
           <button
-            className="w-full"
+            className={classNames("w-full overflow-hidden", {
+              ["h-24 max-h-[100px]"]: !isExpanded,
+              ["h-44 max-h-none	"]: isExpanded,
+            })}
             onClick={() => {
               if (!isExpanded) {
                 setIsModalOpen(true);
@@ -46,8 +49,8 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
               className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert m-auto"
               src={image}
               alt={`product ${title}`}
-              width={120}
-              height={52}
+              width={100}
+              height={10}
             />
           </button>
         </div>
@@ -67,7 +70,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
 
           <div>
             <button
-              className="text-base text-black-300 text-left mb-2 leading-6"
+              className="text-sm text-black-300 text-left mb-2 leading-5"
               onClick={() => {
                 if (!isExpanded) {
                   setIsModalOpen(true);
@@ -76,7 +79,14 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
               ref={titleButtonRef}
               type="button"
             >
-              <span>{title}</span>
+              <span
+                className={classNames({
+                  ["overflow-hidden text-ellipsis h-10 text-clip break-words block"]:
+                    !isExpanded,
+                })}
+              >
+                {title}
+              </span>
             </button>
 
             {isExpanded && <p className="mt-4 mb-8 text-base">{description}</p>}
