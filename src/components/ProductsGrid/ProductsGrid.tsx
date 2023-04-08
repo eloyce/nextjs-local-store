@@ -7,6 +7,7 @@ import DropdownCheckbox from "~/components/DropdownCheckbox";
 import ProductTile from "~/components/ProductTile";
 
 import { CheckboxType, Product } from "~/types";
+import { ProductContextProvider } from "~/context";
 
 import {
   CATEGORY_URL,
@@ -207,7 +208,9 @@ const ProductGrid = ({ initialProducts }: { initialProducts: Product[] }) => {
 
       <section className="p-6 gap-6 grid-cols-1 grid md:grid-cols-3 lg:grid-cols-6">
         {products.map((product) => (
-          <ProductTile key={product.id} product={product} />
+          <ProductContextProvider key={product.id} product={product}>
+            <ProductTile />
+          </ProductContextProvider>
         ))}
       </section>
     </>

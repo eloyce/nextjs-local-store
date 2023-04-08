@@ -1,19 +1,23 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import classNames from "classnames";
 
 import ProductModal from "~/components/ProductModal";
 
-import { Product } from "~/types";
+import { ProductContext } from "~/context/ProductContextProvider";
 
-const ProductTile = ({
-  product,
-  isExpanded = false,
-}: {
-  product: Product;
-  isExpanded?: boolean;
-}) => {
+const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const titleButtonRef = useRef<HTMLButtonElement>(null);
+
+  const {
+    category,
+    description,
+    image,
+    price: productPrice,
+    title,
+  } = useContext(ProductContext);
+
+  const price = productPrice.toFixed(2);
 
   const onClose = () => {
     if (titleButtonRef.current) {
@@ -24,9 +28,6 @@ const ProductTile = ({
     }
     setIsModalOpen(false);
   };
-
-  const { category, image, title } = product;
-  const price = product.price.toFixed(2);
 
   return (
     <>
@@ -78,9 +79,7 @@ const ProductTile = ({
               <span>{title}</span>
             </button>
 
-            {isExpanded && (
-              <p className="mt-4 mb-8 text-base">{product.description}</p>
-            )}
+            {isExpanded && <p className="mt-4 mb-8 text-base">{description}</p>}
 
             <div
               className={classNames({
@@ -101,7 +100,7 @@ const ProductTile = ({
         </div>
       </article>
 
-      {isModalOpen && <ProductModal onClose={onClose} product={product} />}
+      {isModalOpen && <ProductModal onClose={onClose} />}
     </>
   );
 };
