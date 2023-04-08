@@ -55,9 +55,9 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
           </button>
         </div>
 
-        <div className="px-4 pt-2">
+        <div className="px-4 pt-2 overflow-hidden">
           <div
-            className={classNames("flex flex-row justify-between", {
+            className={classNames("flex flex-row justify-between gap-1", {
               ["mb-0"]: isExpanded,
               ["mb-3"]: !isExpanded,
             })}
