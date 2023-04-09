@@ -81,8 +81,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
             >
               <span
                 className={classNames({
-                  ["overflow-hidden text-ellipsis h-10 text-clip break-words block"]:
-                    !isExpanded,
+                  ["line-clamp-2 h-10"]: !isExpanded,
                 })}
               >
                 {title}

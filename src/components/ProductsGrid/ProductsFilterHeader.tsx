@@ -10,6 +10,8 @@ import { CheckboxType } from "~/types";
 import { CATEGORIES_URL } from "~/utils/constants/api";
 import { HOME } from "~/utils/constants/routes";
 
+const OPTION_ALL = "all";
+
 const ProductsFilterHeader = ({
   onCategoryFetch,
   totalProducts,
@@ -20,32 +22,38 @@ const ProductsFilterHeader = ({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [categories, setCategories] = useState<CheckboxType[]>([]);
 
   const onToggle = (checked: boolean, index: number) => {
     const newOptions = [...categories];
+    const indexOfOptionAll = 0;
     newOptions[index].isChecked = checked;
 
-    setIsDropdownOpen(false);
-
-    // Edge case on empty checks boxes.
     const isWithoutSelection = newOptions.every((option) => !option.isChecked);
+    const isAllSelected = newOptions[index].value === OPTION_ALL && checked;
+    const isEverySelectedButAll = newOptions
+      .slice(indexOfOptionAll + 1)
+      .every((opt) => opt.isChecked);
 
-    // If select all, check and get all.
-    if ((newOptions[index].value === "all" && checked) || isWithoutSelection) {
-      router.push(HOME);
-      onCategoryFetch("all");
+    if (isAllSelected || isWithoutSelection || isEverySelectedButAll) {
+      router.push(HOME, undefined, { scroll: false });
+
+      onCategoryFetch(OPTION_ALL);
       setCategories((prev) =>
-        prev.map((entry) => ({ ...entry, isChecked: true }))
+        prev.map((entry) => ({
+          ...entry,
+          isChecked: true,
+          disabled: entry.value === OPTION_ALL,
+        }))
       );
       return;
     }
 
-    const indexForAll = 0;
-    if (newOptions[indexForAll].isChecked) {
-      // If all was previously selected, deselect it.
-      newOptions[0].isChecked = false;
+    // If "all" was previously selected, deselect it.
+    if (newOptions[indexOfOptionAll].isChecked) {
+      newOptions[indexOfOptionAll].isChecked = false;
+      newOptions[indexOfOptionAll].disabled = false;
     }
 
     const options = newOptions.reduce((accum: string[], current) => {
@@ -58,9 +66,13 @@ const ProductsFilterHeader = ({
     onCategoryFetch(options);
     setCategories(newOptions);
 
-    router.push({
-      query: { category: options.join(",") },
-    });
+    router.push(
+      {
+        query: { category: options.join(",") },
+      },
+      undefined,
+      { scroll: false }
+    );
   };
 
   const fetchCategories = async () => {
@@ -83,10 +95,10 @@ const ProductsFilterHeader = ({
 
   const selectedOptions = useMemo(() => {
     const isAllSelected = categories.find(
-      (c) => c.value === "all" && c.isChecked
+      (c) => c.value === OPTION_ALL && c.isChecked
     );
     if (isAllSelected) {
-      return "all";
+      return OPTION_ALL;
     }
 
     const formattedSelection = categories
@@ -114,13 +126,13 @@ const ProductsFilterHeader = ({
       }));
 
       setCategories([
-        { value: "all", label: "All", isChecked: false },
+        { value: OPTION_ALL, label: "All", isChecked: false },
         ...optionsFromParams,
       ]);
     } else {
       setCategories((prev) => {
         return [
-          { value: "all", label: "All", isChecked: true },
+          { value: OPTION_ALL, label: "All", isChecked: true, disabled: true },
           ...prev.map((entry) => ({ ...entry, isChecked: true })),
         ];
       });
@@ -136,27 +148,29 @@ const ProductsFilterHeader = ({
       <div className="flex flex-row justify-between items-center relative md:gap-6">
         <h1 className="uppercase tracking-wide text-sm">Our local products</h1>
 
-        <button
-          className="text-sm flex flex-row items-center gap-2"
-          onClick={() => setIsDropdownOpen((v) => !v)}
-          type="button"
-        >
-          <span className="max-w-[130px] text-ellipsis overflow-hidden whitespace-nowrap md:whitespace-normal sm:max-w-md">
-            Filtered by {selectedOptions}
-          </span>
-          <Image
-            src="/down-arrow.svg"
-            alt="down arrow"
-            width={14}
-            height={14}
-          />
-        </button>
+        <div className="relative">
+          <button
+            className="text-sm flex flex-row items-center gap-2"
+            onClick={() => setIsDropdownOpen((v) => !v)}
+            type="button"
+          >
+            <span className="max-w-[130px] text-ellipsis overflow-hidden whitespace-nowrap md:whitespace-normal sm:max-w-md">
+              Filtered by {selectedOptions}
+            </span>
+            <Image
+              src="/down-arrow.svg"
+              alt="down arrow"
+              width={14}
+              height={14}
+            />
+          </button>
 
-        {isDropdownOpen && (
-          <div className="absolute top-6 right-0 z-10">
-            <DropdownCheckbox options={categories} onToggle={onToggle} />
-          </div>
-        )}
+          {isDropdownOpen && (
+            <div className="absolute left-0 top-6 z-10 min-w-[180px]">
+              <DropdownCheckbox options={categories} onToggle={onToggle} />
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex-row flex items-center md:border-l-[1px] md:border-l-slate-500 md:pl-5">
