@@ -4,16 +4,19 @@ ReactModal.setAppElement("#__next");
 
 const Modal = ({
   children,
+  contentLabel,
   onClose,
   style,
 }: {
   children: React.ReactNode;
+  contentLabel: string;
   onClose: () => void;
   style?: ReactModal.Styles;
 }) => {
   return (
     <ReactModal
       isOpen
+      contentLabel={contentLabel}
       onRequestClose={onClose}
       shouldCloseOnOverlayClick
       style={{
