@@ -112,7 +112,7 @@ const ProductsFilterHeader = ({
       }, "")
       .split(",")
       .join(", ")
-      .replace(/,\s*$/, "");
+      .replace(/,\s*$/, ""); // Remove trailing comma
 
     return formattedSelection;
   }, [categories]);
@@ -132,12 +132,15 @@ const ProductsFilterHeader = ({
         ...optionsFromParams,
       ]);
     } else {
-      setCategories((prev) => {
-        return [
-          { value: OPTION_ALL, label: "All", isChecked: true, disabled: true },
-          ...prev.map((entry) => ({ ...entry, isChecked: true })),
-        ];
-      });
+      const defaultOptions = options.map((entry) => ({
+        ...entry,
+        isChecked: true,
+      }));
+
+      setCategories([
+        { value: OPTION_ALL, label: "All", isChecked: true, disabled: true },
+        ...defaultOptions,
+      ]);
     }
   };
 

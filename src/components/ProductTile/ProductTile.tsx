@@ -22,12 +22,18 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
 
   const onClose = () => {
     if (titleButtonRef.current) {
-      // Return focus on modal dismiss to product
+      // Return focus on modal dismiss to product tile.
       setTimeout(() => {
         titleButtonRef.current?.focus();
       });
     }
     setIsModalOpen(false);
+  };
+
+  const onClick = () => {
+    if (!isExpanded) {
+      setIsModalOpen(true);
+    }
   };
 
   return (
@@ -39,11 +45,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
               ["h-24 max-h-[100px]"]: !isExpanded,
               ["h-44 max-h-none	"]: isExpanded,
             })}
-            onClick={() => {
-              if (!isExpanded) {
-                setIsModalOpen(true);
-              }
-            }}
+            onClick={onClick}
             type="button"
           >
             <Image
@@ -72,11 +74,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
           <div>
             <button
               className="text-sm text-black-300 text-left mb-2 leading-5"
-              onClick={() => {
-                if (!isExpanded) {
-                  setIsModalOpen(true);
-                }
-              }}
+              onClick={onClick}
               ref={titleButtonRef}
               type="button"
             >
