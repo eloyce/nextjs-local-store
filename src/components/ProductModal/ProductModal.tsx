@@ -16,7 +16,7 @@ const ProductModal = ({ onClose }: { onClose: () => void }) => {
       <div className="relative max-w-md m-auto">
         <button
           aria-label="dismiss modal"
-          className="absolute top-2 right-2 w-[28px] h-[28px] text-sm rounded-full border-2 border-black text-black font-semibold"
+          className="absolute top-2 right-2 w-[28px] h-[28px] text-sm rounded-full border-2 border-black text-black font-semibold z-10"
           onClick={onClose}
           type="button"
         >

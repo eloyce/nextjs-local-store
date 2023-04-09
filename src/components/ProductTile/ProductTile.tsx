@@ -46,7 +46,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
               ["h-44 max-h-none	"]: isExpanded,
             })}
             disabled={isExpanded}
-            aria-haspop={isExpanded ? "" : "dialog"}
+            aria-haspopup={isExpanded ? "false" : "dialog"}
             onClick={onClick}
             type="button"
           >
@@ -75,7 +75,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
 
           <div>
             <button
-              aria-haspop={isExpanded ? "" : "dialog"}
+              aria-haspopup={isExpanded ? "false" : "dialog"}
               className="text-sm text-black-300 text-left mb-2 leading-5"
               disabled={isExpanded}
               onClick={onClick}
