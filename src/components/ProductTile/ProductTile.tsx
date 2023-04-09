@@ -18,7 +18,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
     title,
   } = useContext(ProductContext);
 
-  const price = productPrice.toFixed(2);
+  const price = Number(Number(productPrice).toFixed(2));
 
   const onClose = () => {
     if (titleButtonRef.current) {
@@ -50,7 +50,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
               className="relative m-auto"
               src={image}
               alt={`product ${title}`}
-              style={{ objectFit: 'contain' }}
+              style={{ objectFit: "contain" }}
               fill
             />
           </button>
