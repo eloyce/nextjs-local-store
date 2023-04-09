@@ -22,7 +22,7 @@ const ProductsFilterHeader = ({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [categories, setCategories] = useState<CheckboxType[]>([]);
 
   const onToggle = (checked: boolean, index: number) => {
@@ -35,6 +35,8 @@ const ProductsFilterHeader = ({
     const isEverySelectedButAll = newOptions
       .slice(indexOfOptionAll + 1)
       .every((opt) => opt.isChecked);
+
+    setIsDropdownOpen(false);
 
     if (isAllSelected || isWithoutSelection || isEverySelectedButAll) {
       router.push(HOME, undefined, { scroll: false });

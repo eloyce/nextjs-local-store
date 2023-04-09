@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useState, useRef, useContext } from "react";
 import classNames from "classnames";
 
@@ -34,7 +35,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
       <article className="rounded-lg py-3 border border-slate-100 shadow-xl flex flex-col">
         <div>
           <button
-            className={classNames("w-full overflow-hidden", {
+            className={classNames("w-full overflow-hidden relative", {
               ["h-24 max-h-[100px]"]: !isExpanded,
               ["h-44 max-h-none	"]: isExpanded,
             })}
@@ -45,12 +46,12 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
             }}
             type="button"
           >
-            <img
-              className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert m-auto"
+            <Image
+              className="relative m-auto"
               src={image}
               alt={`product ${title}`}
-              width={100}
-              height={10}
+              style={{ objectFit: 'contain' }}
+              fill
             />
           </button>
         </div>

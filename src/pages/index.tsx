@@ -19,6 +19,7 @@ export default function Home({ products }: { products: Product[] }) {
           alt="Picture of the storefront"
           src={storefrontPic}
           className="max-h-56 md:h-80 md:max-h-72 md:w-full"
+          priority
         />
         <ProductGrid initialProducts={products} />
       </div>
