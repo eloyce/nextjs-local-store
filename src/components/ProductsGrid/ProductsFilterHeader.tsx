@@ -151,7 +151,7 @@ const ProductsFilterHeader = ({
   return (
     <section className="border-b border-b-slate-400 mx-2 py-4 flex-col flex gap-2 md:flex-row md:justify-between">
       <div className="flex flex-row justify-between items-center relative md:gap-6">
-        <h1 className="uppercase tracking-wide text-sm">Our local products</h1>
+        <h2 className="uppercase tracking-wide text-sm">Our local products</h2>
 
         <div className="relative">
           <button

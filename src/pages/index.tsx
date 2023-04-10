@@ -1,8 +1,6 @@
 import { GetServerSideProps } from "next/types";
-import Image from "next/image";
 import { Roboto } from "next/font/google";
 import React from "react";
-import storefrontPic from "../assets/storefront-bg.png";
 
 import Navigation from "~/components/Navigation";
 import ProductGrid from "~/components/ProductsGrid";
@@ -12,10 +10,32 @@ import { ALL_PRODUCTS, CATEGORY_URL } from "~/utils/constants/api";
 import classNames from "classnames";
 
 const roboto = Roboto({
-  weight: ['400', '500', '700'],
-  style: ['normal'],
-  subsets: ['latin'],
-})
+  weight: ["300", "400", "500", "700"],
+  style: ["normal"],
+  subsets: ["latin"],
+});
+
+const Fold = () => (
+  <div
+    className="w-full h-40 md:h-[205px] flex flex-row items-center gap-2 px-4 relative md:justify-center"
+    style={{
+      background: "linear-gradient(180deg, #FFFFFF 0%, #FABE7C 100%)",
+    }}
+  >
+    {/* Background image */}
+    <div className="w-80 h-full bg-no-repeat bg-[length:280px_150px] bg-bottom bg-[url('../assets/localshop.png')] lg:absolute md:auto md:r-[50%] md:left-0 md:w-96 md:bg-[length:360px_200px]" />
+
+    <h1 className="text-base text-[#46237A] font-light leading-none md:text-3xl lg:text-5xl">
+      <span>
+        This is a <strong className="font-medium">local</strong> shop
+      </span>
+      <span className="md:block md:pl-14 lg:pl-40">
+        {" "}
+        for <strong className="font-medium">local</strong> people.
+      </span>
+    </h1>
+  </div>
+);
 
 export default function Home({ products }: { products: Product[] }) {
   return (
@@ -26,14 +46,9 @@ export default function Home({ products }: { products: Product[] }) {
       )}
     >
       <Navigation />
+      <Fold />
 
       <div className="w-full max-w-7xl m-auto bg-white">
-        <Image
-          alt="Picture of the storefront"
-          src={storefrontPic}
-          className="max-h-56 md:h-80 md:max-h-72 md:w-full"
-          priority
-        />
         <ProductGrid initialProducts={products} />
       </div>
     </main>

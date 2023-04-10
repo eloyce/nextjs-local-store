@@ -4,7 +4,7 @@ describe("Products rendering", () => {
   });
 
   it("Visit homepage", () => {
-    cy.get("h1").should("contain", "Our local products");
+    cy.get("h1").should("contain", "This is a local shop for local people.");
 
     // To remove once pagination is introduced.
     cy.get('[data-test="totalProducts"]').then((el) => {
