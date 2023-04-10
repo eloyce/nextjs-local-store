@@ -12,6 +12,7 @@ const DropdownCheckbox = ({
       {options.map((option, index) => (
         <label key={option.value} className="flex flex-row items-center gap-2">
           <input
+            className="accent-[#46237A]"
             checked={option.isChecked}
             onChange={(e) => onToggle(e.target.checked, index)}
             value={option.value}
