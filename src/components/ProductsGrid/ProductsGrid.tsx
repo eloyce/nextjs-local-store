@@ -1,14 +1,17 @@
 import { useState } from "react";
 
-import ProductTile from "~/components/ProductTile";
-
-import { Product } from "~/types";
+import { Product as ProductType } from "~/types";
 import { ProductContextProvider } from "~/context";
 import { CATEGORY_URL, ALL_PRODUCTS } from "~/utils/constants/api";
 
+import Product from "~/components/Product";
 import ProductsFilterHeader from "./ProductsFilterHeader";
 
-const ProductGrid = ({ initialProducts }: { initialProducts: Product[] }) => {
+const ProductGrid = ({
+  initialProducts,
+}: {
+  initialProducts: ProductType[];
+}) => {
   const [products, setProducts] = useState(initialProducts);
 
   const onCategoryFetch = async (category: string | string[]) => {
@@ -40,10 +43,13 @@ const ProductGrid = ({ initialProducts }: { initialProducts: Product[] }) => {
         totalProducts={products.length}
       />
 
-      <section className="p-6 gap-6 grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6" data-test='productGrid'>
+      <section
+        className="p-6 gap-6 grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6"
+        data-test="productGrid"
+      >
         {products.map((product) => (
           <ProductContextProvider key={product.id} product={product}>
-            <ProductTile />
+            <Product />
           </ProductContextProvider>
         ))}
       </section>
