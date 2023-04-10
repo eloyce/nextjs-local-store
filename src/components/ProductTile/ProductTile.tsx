@@ -67,7 +67,9 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
               ["mb-3"]: !isExpanded,
             })}
           >
-            <span className="capitalize text-xs">{category}</span>
+            <span className="capitalize text-xs" data-test="productCategory">
+              {category}
+            </span>
             {!isExpanded && (
               <small className="bg-[#fee2c3] p-1 text-sm font-bold rounded">{`$${price}`}</small>
             )}
@@ -86,6 +88,7 @@ const ProductTile = ({ isExpanded = false }: { isExpanded?: boolean }) => {
                 className={classNames({
                   ["line-clamp-2 h-10"]: !isExpanded,
                 })}
+                data-test="productTitle"
               >
                 {title}
               </span>

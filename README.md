@@ -14,5 +14,12 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## To run test (Cypress)
+```
+npx cypress open
+```
+
+Ideally, with more time, tests would provide more coverage such as category filtering and URL params decoration.
+
 ## Live demo
 https://runelabs-eloyce-live-demo.vercel.app/

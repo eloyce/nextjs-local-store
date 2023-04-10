@@ -179,7 +179,9 @@ const ProductsFilterHeader = ({
       </div>
 
       <div className="flex-row flex items-center md:border-l-[1px] md:border-l-slate-500 md:pl-5">
-        <p className="m-0 text-sm">{totalProducts} Products</p>
+        <p className="m-0 text-sm">
+          <span data-test="totalProducts">{totalProducts}</span> Products
+        </p>
       </div>
     </section>
   );

@@ -40,7 +40,7 @@ const ProductGrid = ({ initialProducts }: { initialProducts: Product[] }) => {
         totalProducts={products.length}
       />
 
-      <section className="p-6 gap-6 grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+      <section className="p-6 gap-6 grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6" data-test='productGrid'>
         {products.map((product) => (
           <ProductContextProvider key={product.id} product={product}>
             <ProductTile />
