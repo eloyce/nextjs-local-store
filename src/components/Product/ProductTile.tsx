@@ -30,7 +30,7 @@ const ProductTile = ({
   };
 
   return (
-    <article className="rounded-lg py-3 border border-slate-100 shadow-xl flex flex-col">
+    <article className="rounded-lg pt-3 border border-slate-100 shadow-xl flex flex-col">
       <div>
         <button
           className={classNames("w-full overflow-hidden relative", {
@@ -52,7 +52,12 @@ const ProductTile = ({
         </button>
       </div>
 
-      <div className="px-4 pt-2 overflow-hidden">
+      <div
+        className={classNames("overflow-hidden", {
+          ["p-4"]: isExpanded,
+          ["p-2"]: !isExpanded,
+        })}
+      >
         <div
           className={classNames("flex flex-row justify-between gap-1", {
             ["mb-0"]: isExpanded,
@@ -70,7 +75,7 @@ const ProductTile = ({
         <div>
           <button
             aria-haspopup={isExpanded ? "false" : "dialog"}
-            className="text-sm text-black-300 text-left mb-2 leading-5"
+            className="text-base text-black-300 text-left mb-2 leading-5"
             disabled={isExpanded}
             onClick={onOpen}
             ref={titleButtonRef}
@@ -86,7 +91,9 @@ const ProductTile = ({
             </span>
           </button>
 
-          {isExpanded && <p className="mt-4 mb-8 text-base">{description}</p>}
+          {isExpanded && (
+            <p className="mt-4 mb-8 text-base leading-[21px]">{description}</p>
+          )}
 
           <div
             className={classNames({
@@ -97,7 +104,7 @@ const ProductTile = ({
               <small className="bg-[#fee2c3] py-1 text-sm font-bold rounded items-center flex px-2.5">{`$${price}`}</small>
             )}
             <button
-              className="bg-blue-600 py-2 text-white font-light text-base text-center w-full rounded tracking-wide"
+              className="bg-blue-600 py-2 text-white font-normal text-base text-center w-full rounded tracking-wide"
               type="button"
             >
               Add to cart

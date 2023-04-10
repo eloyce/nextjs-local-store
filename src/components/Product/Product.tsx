@@ -44,7 +44,7 @@ const Product = () => {
             >
               X
             </button>
-            <div className="bg-white">
+            <div className="bg-white rounded-lg">
               <ProductTile isExpanded />
             </div>
           </div>

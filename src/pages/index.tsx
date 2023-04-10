@@ -1,5 +1,6 @@
 import { GetServerSideProps } from "next/types";
 import Image from "next/image";
+import { Roboto } from "next/font/google";
 import React from "react";
 import storefrontPic from "../assets/storefront-bg.png";
 
@@ -8,10 +9,22 @@ import ProductGrid from "~/components/ProductsGrid";
 
 import { Product } from "~/types";
 import { ALL_PRODUCTS, CATEGORY_URL } from "~/utils/constants/api";
+import classNames from "classnames";
+
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  style: ['normal'],
+  subsets: ['latin'],
+})
 
 export default function Home({ products }: { products: Product[] }) {
   return (
-    <main className="flex min-h-screen flex-col bg-white">
+    <main
+      className={classNames(
+        "flex min-h-screen flex-col bg-white",
+        roboto.className
+      )}
+    >
       <Navigation />
 
       <div className="w-full max-w-7xl m-auto bg-white">
