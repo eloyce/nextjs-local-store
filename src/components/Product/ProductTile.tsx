@@ -61,7 +61,7 @@ const ProductTile = ({
         <div
           className={classNames("flex flex-row justify-between gap-1", {
             ["mb-0"]: isExpanded,
-            ["mb-3"]: !isExpanded,
+            ["mb-2"]: !isExpanded,
           })}
         >
           <span className="capitalize text-xs" data-test="productCategory">
